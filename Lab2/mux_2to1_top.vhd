@@ -1,14 +1,15 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
-entity mux_2to1_top is
-    Port ( SEL : in  STD_LOGIC;
-           A   : in  STD_LOGIC_VECTOR (7 downto 0);
-           B   : in  STD_LOGIC_VECTOR (7 downto 0);
-           X   : out STD_LOGIC_VECTOR (7 downto 0));
-end mux_2to1_top;
+entity mux2 is
+generic (n:integer:=8);
+    Port ( sel : in  STD_LOGIC;
+           dina   : in  STD_LOGIC_VECTOR (n-1 downto 0);
+           dinb   : in  STD_LOGIC_VECTOR (n-1 downto 0);
+           dout   : out STD_LOGIC_VECTOR (n-1 downto 0));
+end mux2;
 
-architecture Behavioral of mux_2to1_top is
+architecture Behavioral of mux2 is
 begin
-    X <= A when (SEL = '1') else B;
+    dout <= dina when (sel = '1') else dinb;
 end Behavioral;
