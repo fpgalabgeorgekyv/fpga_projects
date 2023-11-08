@@ -1,75 +1,32 @@
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_UNSIGNED.ALL;
-use ieee.NUMERIC_STD.all;
------------------------------------------------
----------- ALU 8-bit VHDL ---------------------
------------------------------------------------
-entity ALU is
-  generic ( 
-     constant N: natural := 1  -- number of shited or rotated bits
-    );
-  
-    Port (
-    A, B     : in  STD_LOGIC_VECTOR(7 downto 0);  -- 2 inputs 8-bit
-    ALU_Sel  : in  STD_LOGIC_VECTOR(3 downto 0);  -- 1 input 4-bit for selecting function
-    ALU_Out   : out  STD_LOGIC_VECTOR(7 downto 0); -- 1 output 8-bit 
-    Carryout : out std_logic        -- Carryout flag
-    );
-end ALU; 
-architecture Behavioral of ALU is
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+use work.alulib.all;
 
-signal ALU_Result : std_logic_vector (7 downto 0);
-signal tmp: std_logic_vector (8 downto 0);
+entity alu is
+generic (n : integer := 8);
+port ( ac : in std_logic_vector(n-1 downto 0);
+ db : in std_logic_vector(n-1 downto 0);
+ alus : in std_logic_vector(7 downto 1);
+ dout : out std_logic_vector(n-1 downto 0));
+end alu ;
 
+architecture arch of alu is
+signal f1,f2,f3,f4: std_logic_vector (n-1 downto 0);
+signal zero,notdb : std_logic_vector (n-1 downto 0);
+signal ANDout, ORout, XORout, NOTout : std_logic_vector (n-1 downto 0);
 begin
-   process(A,B,ALU_Sel)
- begin
-  case(ALU_Sel) is
-  when "0000" => -- Addition
-   ALU_Result <= A + B ; 
-  when "0001" => -- Subtraction
-   ALU_Result <= A - B ;
-  when "0010" => -- Multiplication
-   ALU_Result <= std_logic_vector(to_unsigned((to_integer(unsigned(A)) * to_integer(unsigned(B))),8)) ;
-  when "0011" => -- Division
-   ALU_Result <= std_logic_vector(to_unsigned(to_integer(unsigned(A)) / to_integer(unsigned(B)),8)) ;
-  when "0100" => -- Logical shift left
-   ALU_Result <= std_logic_vector(unsigned(A) sll N);
-  when "0101" => -- Logical shift right
-   ALU_Result <= std_logic_vector(unsigned(A) srl N);
-  when "0110" => --  Rotate left
-   ALU_Result <= std_logic_vector(unsigned(A) rol N);
-  when "0111" => -- Rotate right
-   ALU_Result <= std_logic_vector(unsigned(A) ror N);
-  when "1000" => -- Logical and 
-   ALU_Result <= A and B;
-  when "1001" => -- Logical or
-   ALU_Result <= A or B;
-  when "1010" => -- Logical xor 
-   ALU_Result <= A xor B;
-  when "1011" => -- Logical nor
-   ALU_Result <= A nor B;
-  when "1100" => -- Logical nand 
-   ALU_Result <= A nand B;
-  when "1101" => -- Logical xnor
-   ALU_Result <= A xnor B;
-  when "1110" => -- Greater comparison
-   if(A>B) then
-    ALU_Result <= x"01" ;
-   else
-    ALU_Result <= x"00" ;
-   end if; 
-  when "1111" => -- Equal comparison   
-   if(A=B) then
-    ALU_Result <= x"01" ;
-   else
-    ALU_Result <= x"00" ;
-   end if;
-  when others => ALU_Result <= A + B ; 
-  end case;
- end process;
- ALU_Out <= ALU_Result; -- ALU out
- tmp <= ('0' & A) + ('0' & B);
- Carryout <= tmp(8); -- Carryout flag
-end Behavioral;
+
+zero <= (others=>'0');
+ANDout <= ac AND db;
+ORout <= ac OR db;
+XORout <= ac XOR db;
+NOTout <= NOT (ac);
+notdb <= NOT (db);
+
+MUX_1: mux2 port map(ZERO,ac,alus(1),f1);
+MUX_2: mux4 port map(ZERO,db,NOTDB,ZERO,alus(2)&alus(3),f2);
+MUX_3: mux4 port map(ANDout,ORout,XORout,NOTout,alus(5)&alus(6),f4);
+PADDR: adder8bit port map(f1,f2,alus(4),f3);
+MUX_4: mux2 port map(f3,f4,alus(7),dout);
+end arch;
