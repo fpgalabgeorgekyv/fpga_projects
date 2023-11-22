@@ -22,27 +22,24 @@ signal bt : std_logic
 signal cond,control,selmux: std_logic_vector(1 downto 0);
 signal microcode: std_logic_vector(35 downto 0);
 signal sel, sel0: STD_LOGIC
-signal temp: std_logic_vector(35 downto 0);
 begin
 	irmap <= ir && 00;
-	pl
-	if reset='0' then
+	pl: process(REGOUT,addr,sel1,sel0,reset);
+	begin
+	if reset='1' then
 		mux0 <= "000000";
 		mux1 <= "000000";
 		s1 <= 0;
 		s0 <= 0;
 	else
-		mux0 <= muxreg+1;
+		mux0 <= REGOUT+1;
 		mux1 <= addr;
-		s1 <= bt;
-		s0 <= not(muxout);
-
+		s1 <= sel1;
+		s0 <= sel0;
+		end if
+	end process
 	mux4 port map (mux0,mux1,irmap,ZERO,s1&s0,muxout)
 	mux4 port map (sel,z,not(z),sel0,cond,muxout)
 	regnbit port map (muxout,clock,reset,control,muxreg)
-	mux0 <= muxreg+1;
-	mux1 <= addr;
 	mseq_logic
-	mOPs <= temp(32:6);
-	code <= temp;
 end arc;
