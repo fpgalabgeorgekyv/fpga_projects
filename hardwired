@@ -1,0 +1,85 @@
+signal fetch1,fetch2,fetch3,nop1 std_logic
+signal ldac1,ldac2,ldac3,ldac4,ldac5 std std_logic
+signal stac1,stac2,stac3,stac4,stac5 std_logic
+signal mvac1,movr1,jump1,jump2,jump3 std_logic
+signal jmpz1,jmpzy1,jmpzy2,jmpzy3,jmpzn1,jmpzn2 std_logic
+signal jpnz1,jpnzy1,jpnzy2,jpnzy3,jpnzn1,jpnzn2 std_logic
+signal add1,sub1,inac1,clac1,and1,or1,xor1,not1
+signal cdata std_logic_vector(2 downto 0)
+signal T std_logic_vector(7 down to 0)
+signal I std_logic_vector(15 downto 0)
+signal notz,inc,clear std_logic
+
+notz <= not(z);
+
+CA: count generic map (n=>3) port map ("000",clock,'0',clear,inc,cdata)
+DE: st decoder port map(cdata,T)
+ID: 
+inc <= fetch1 or fetch2 or fetch3 or ldac1 or ldac2 or ldac3 or ldac4 or ldac5 jmpzy1 jmpzy2 jmpzn1 jpnzy1 jpnzy2 jpnzn1
+clear <= NOP1 ldac5 stac5 mvac1 mov1 jump3 inac1 clac1 and1 or1 xor1 not1
+
+fetch1 <= T(0);
+fetch2 <= T(1);
+fetch3 <= T(2);
+nop1 <= T(3) and I(0);
+ldac1 <= T(3) and I(1);
+ldac2 <= T(4) and I(1);
+ldac3 <= T(5) and I(1);
+ldac4 <= T(6) and I(1);
+ldac5 <= T(7) and I(1);
+stac1 <= T(3) and I(2);
+stac2 <= T(4) and I(2);
+stac3 <= T(5) and I(2);
+stac4 <= T(6) and I(2);
+stac5 <= T(7) and I(2);
+mvac1 <= T(3) and I(3);
+movr1 <= T(3) and I(4);
+jump1 <= T(3) and I(5);
+jump2 <= T(4) and I(5);
+jump3 <= T(5) and I(5);
+jmpzy1 <= T(3) and I(6) and z;
+jmpzy2 <= T(4) and I(6) and z;
+jmpzy3 <= T(5) and I(6) and z;
+jmpzn1 <= T(3) and I(6) and notz;
+jmpzn2 <= T(4) and I(6) and notz;
+jpnzy1 <= T(3) and I(7) and notz;
+jpnzy2 <= T(4) and I(7) and notz;
+jpnzy3 <= T(5) and I(7) and notz;
+jpnzn1 <= T(3) and I(7) and z;
+jpnzn2 <= T(4) and I(7) and z;
+add1 <= T(3) and I(8);
+sub1 <= T(3) and I(9);
+inac1 <= T(3) and I(10);
+clac1 <= T(3) and I(11);
+and1 <= T(3) and I(12);
+or1 <= T(3) and I(13);
+xor1 <= T(3) and I(14);
+not1 <= T(3) and I(15);
+
+mOPs(26) <= fetch1 or fetch3 or ldac3 or stac3;
+mOPs(25) <= ldac1 or stac1 or jmpzy1 or jpnzy1;
+mOPs(24) <= jump3 or jmpzy3 or jpnzy3;
+mOPs(23) <= fetch2 or ldac1 or ldac2 or stac1 or stac2 or jmpzn1 or jmpz2 or jpnz1 or jpnz2;
+mOPs(22) <= fecth2 or ldac1 or ldac2 or ldac4 or stac1 or stac2 or stac4 or jump1 or jump2 or jmpzy1 or jmpzy2 or jpnzy1 or jpnzy2;
+mOPs(21) <= ldac2 or stac2 or jump2 or jmpzy2 or jpnzy2;
+mOPs(20) <= fetch3;
+mOPs(19) <= mvac1;
+mOPs(18) <= ldac5 or movr1 or add1 or sub1 or inac1 or clac1 or and1 or or1 or xor1 or not1;
+mOPs(17) <= ldac5 or movr1 or add1 or sub1 or inac1 or clac1 or and1 or or1 or xor1 or not1;
+mOPs(16) <= fetch2 or ldac1 or ldac2 or ldac4 or stac1 or stac2 or jump1 or jump2 or jmpzy1 or jmpzy2 or jpnzy1 or jpnzy2;
+mOPs(15) <= stac5;
+mOPs(14) <= fetch2 or ldac1 or ldac2 or ldac4 or stac1 or stac2 or jump1 or jump2 or jmpzy1 or jmpzy2 or jpnzy1 or jpnzy2;
+mOPs(13) <= stac5;
+mOPs(12) <= fetch1 or fetch3;
+mOPs(11) <= or or or or or or or or or or or
+mOPs(10) <= ldac3 or stac3 or jump3 or jmpzy3 or jpnzy3;
+mOPs(9) <= movr1 or add1 or sub1 or or or 
+mOPs(8) <= stac4 or mvac1;
+mOPs(7) <= and1;
+mOPs(6) <= or1;
+mOPs(5) <= xor1;
+mOPs(4) <= not1;
+mOPs(3) <= inac1;
+mOPs(2) <= clac1;
+mOPs(1) <= add1;
+mOPs(0) <= sub1;
