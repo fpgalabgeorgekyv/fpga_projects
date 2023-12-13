@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-package mseqlib is
+package hardwiredlib is
 
 component decoder4bit is
 port( din            	  : in std_logic_vector(3 downto 0);
@@ -20,4 +20,4 @@ component counter is
            count : out STD_LOGIC_VECTOR(3 downto 0));
 end component;
 	
-end package mseqlib;
+end package hardwiredlib;
