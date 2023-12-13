@@ -3,14 +3,14 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
-entity Counter is
+entity counter is
     Port ( clk : in STD_LOGIC;
            rst : in STD_LOGIC;
            incr : in STD_LOGIC;
            count : out STD_LOGIC_VECTOR(3 downto 0));
-end Counter;
+end counter;
 
-architecture Behavioral of Counter is
+architecture Behavioral of counter is
     signal counter_value : STD_LOGIC_VECTOR(3 downto 0) := "0000";
 begin
     process(clk, rst)
