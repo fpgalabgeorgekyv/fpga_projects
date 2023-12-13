@@ -8,7 +8,7 @@ use work.hardwiredlib.all;
 entity decoder4bit is
 port( din            	  : in std_logic_vector(3 downto 0);
            dout             : out std_logic_vector(15 downto 0));
-end decoder3bit;
+end decoder4bit;
 architecture arc of decoder3bit is
 begin
 process (din)
