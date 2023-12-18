@@ -1,10 +1,25 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+library lpm;
+use lpm.lpm_components.all;
+use work.hardwiredlib.all;
+
+entity hardwired is
+port( ir            	  : in std_logic_vector(3 downto 0);
+           clock, reset  : in std_logic ;
+           z             	  : in std_logic ;
+           mOPs             : out std_logic_vector(26 downto 0));
+end hardwired;
+architecture arc of hardwired is
+begin
 signal fetch1,fetch2,fetch3,nop1 std_logic
 signal ldac1,ldac2,ldac3,ldac4,ldac5 std std_logic
 signal stac1,stac2,stac3,stac4,stac5 std_logic
 signal mvac1,movr1,jump1,jump2,jump3 std_logic
 signal jmpz1,jmpzy1,jmpzy2,jmpzy3,jmpzn1,jmpzn2 std_logic
 signal jpnz1,jpnzy1,jpnzy2,jpnzy3,jpnzn1,jpnzn2 std_logic
-signal add1,sub1,inac1,clac1,and1,or1,xor1,not1
+signal add1,sub1,inac1,clac1,and1,or1,xor1,not1 std_logic
 signal cdata std_logic_vector(2 downto 0)
 signal T std_logic_vector(7 down to 0)
 signal I std_logic_vector(15 downto 0)
@@ -13,10 +28,10 @@ signal notz,inc,clear std_logic
 notz <= not(z);
 
 CA: count generic map (n=>3) port map ("000",clock,'0',clear,inc,cdata)
-DE: st decoder port map(cdata,T)
+DE: st decoder3bit port map(cdata,T)
 ID: 
-inc <= fetch1 or fetch2 or fetch3 or ldac1 or ldac2 or ldac3 or ldac4 or ldac5 jmpzy1 jmpzy2 jmpzn1 jpnzy1 jpnzy2 jpnzn1
-clear <= NOP1 ldac5 stac5 mvac1 mov1 jump3 inac1 clac1 and1 or1 xor1 not1
+inc <= fetch1 or fetch2 or fetch3 or ldac1 or ldac2 or ldac3 or ldac4 or ldac5 or jmpzy1 or jmpzy2 or jmpzn1 or jpnzy1 or jpnzy2 or jpnzn1
+clear <= nop11 or ldac5 or stac5 or mvac1 or mov1 or jump3 or inac1 or clac1 or and1 or or1 or xor1 nor ot1
 
 fetch1 <= T(0);
 fetch2 <= T(1);
@@ -71,9 +86,9 @@ mOPs(15) <= stac5;
 mOPs(14) <= fetch2 or ldac1 or ldac2 or ldac4 or stac1 or stac2 or jump1 or jump2 or jmpzy1 or jmpzy2 or jpnzy1 or jpnzy2;
 mOPs(13) <= stac5;
 mOPs(12) <= fetch1 or fetch3;
-mOPs(11) <= or or or or or or or or or or or
+mOPs(11) <= ldac2 or ldac3 or ldac5 or stac2 or stac3 or stac5 or jump2 or jump3 or jmpzy2 or jmpzy3 or jpnzy2 or jpnzy3;
 mOPs(10) <= ldac3 or stac3 or jump3 or jmpzy3 or jpnzy3;
-mOPs(9) <= movr1 or add1 or sub1 or or or 
+mOPs(9) <= movr1 or add1 or sub1 or and1 or or1 or xor1;
 mOPs(8) <= stac4 or mvac1;
 mOPs(7) <= and1;
 mOPs(6) <= or1;
@@ -83,3 +98,5 @@ mOPs(3) <= inac1;
 mOPs(2) <= clac1;
 mOPs(1) <= add1;
 mOPs(0) <= sub1;
+
+end arc;
