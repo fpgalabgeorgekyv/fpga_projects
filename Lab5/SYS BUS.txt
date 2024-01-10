@@ -1,0 +1,24 @@
+entity sys_bus is
+port(sbus buffer std_logic_vector (15 downto 0);
+PCdata in std_logic_vector (15 downto 0);
+DRdata, ACdata in std_logic_vector (7 downto 0);
+TRdata,Rdata in std_logic_vector (7 downto 0);
+MEMdata in std_logic_vector (7 downto 0);
+trbus,acbus,rbus in std_logic;
+pcbus, drbus, membus std_logic;
+end sys_bus;
+
+architecture arc of sys_bus is
+signal control : std_logic_vector(5 downto 0);
+begin 
+control <= membus & pcbus & drbus & trbus & rbus & acbus:
+sbus <= x"00" & MEMdata when control="100000" else
+PCdata when control="010000" else
+DRdata & x"00" when control="001000" else
+x"00" & TRdata when control="000100" else
+Rdata & x"00" when control="000010" else
+x"00" & ACdata when control="000001" else
+DRdata & MEMdata when control="101000" else
+DRdata & TRdata when control="001100" else
+(others=>"0")
+end arc
