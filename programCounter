@@ -1,0 +1,26 @@
+entity programCounter is
+    port ( CLK : in STD_LOGIC;
+           SEL : in STD_LOGIC;
+           signExtend : in STD_LOGIC_VECTOR(63 downto 0);
+           Q : out STD_LOGIC_VECTOR(63 downto 0));
+            
+end programCounter;
+
+architecture Behavioral of programCounter is
+
+signal current : STD_LOGIC_VECTOR(63 downto 0) := X"0000000000000000";
+
+begin
+process(CLK)
+begin
+    if RISING_EDGE(CLK) then
+        if SEL = '0' then
+            current <= STD_LOGIC_VECTOR(unsigned(current) \+ 1);
+        elsif SEL = '1' then
+            current <= STD_LOGIC_VECTOR(unsigned(current) \+ signed(signExtend));
+        end if;
+    end if;
+end process;
+    Q <= current;
+
+end Behavioral;
